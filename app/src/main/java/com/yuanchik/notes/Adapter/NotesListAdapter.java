@@ -53,6 +53,22 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListHolder> {
             holder.image_pin.setImageResource(0);
         }
 
+        holder.notes_container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onClick(list.get(holder.getAdapterPosition()));
+
+            }
+        });
+
+        holder.notes_container.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                listener.onLongClick(list.get(holder.getAdapterPosition()), holder.notes_container);
+                return true;
+            }
+        });
+
     }
 
     @Override
