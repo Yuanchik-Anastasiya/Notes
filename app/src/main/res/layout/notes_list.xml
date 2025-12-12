@@ -4,8 +4,8 @@
     android:id="@+id/notes_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="#D1D26B03"
-    app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="#FF6800"
+    app:cardCornerRadius="10dp"
     android:layout_margin="8dp"
     app:cardElevation="8dp">
 
@@ -26,7 +26,7 @@
                 android:backgroundTint="@color/black"
                 android:textStyle="bold|italic"
                 android:textSize="18pt"
-                android:textColor="@color/black"
+                android:textColor="#000080"
                 android:layout_alignParentStart="true"
                 android:padding="8dp"
                 android:singleLine="true"
@@ -40,6 +40,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentEnd="true"
+                android:layout_marginTop="5dp"
                 android:src="@drawable/pin"/>
             
             
@@ -55,21 +56,38 @@
             android:textColor="@color/alpha"
             android:padding="8dp"
             android:maxLines="10"/>
-
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <TextView
             android:id="@+id/text_date"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Data"
-            android:textStyle="normal"
-            android:textSize="10pt"
-            android:textColor="@color/grey"
-            android:padding="8dp"
-            android:maxLines="10"
-            android:singleLine="true"
             android:ellipsize="marquee"
             android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"/>
+            android:maxLines="10"
+            android:padding="8dp"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:text="Data"
+            android:textColor="#000000"
+            android:textSize="10pt"
+            android:textStyle="normal"
+            />
+
+        <ImageView
+            android:id="@+id/image_spider"
+            android:layout_width="20pt"
+            android:layout_height="20pt"
+            android:padding="5dp"
+            android:layout_alignParentEnd="true"
+            app:srcCompat="@drawable/spider" />
+    </RelativeLayout>
+</LinearLayout>
 
     </LinearLayout>
 
