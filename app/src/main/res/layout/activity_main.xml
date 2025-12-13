@@ -28,7 +28,7 @@
         android:layout_margin="26dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/ic_add"
+        android:src="@drawable/ic_add2"
         android:backgroundTint="#00000000"
         app:maxImageSize="60dp" />
 
