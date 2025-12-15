@@ -1,10 +1,14 @@
 package com.yuanchik.notes;
 
+import android.app.Activity;
+import android.app.ComponentCaller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
@@ -58,6 +62,21 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 101) {
+            if (resultCode == Activity.RESULT_OK) {
+                Notes new_notes = (Notes) data.getSerializableExtra("note");
+                database.mainDao().insert(new_notes);
+                notes.clear();
+                notes.addAll(database.mainDao().getAll());
+                notesListAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     private void updateRecycler(List<Notes> notes) {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
@@ -69,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
     private final NotesClickListener notesClickListener = new NotesClickListener() {
         @Override
         public void onClick(Notes notes) {
+            Intent intent = new Intent(MainActivity.this, NotesTakerActivity.class);
+            intent.putExtra("old_note", notes);
+            startActivityForResult(intent, 102);
 
         }
 

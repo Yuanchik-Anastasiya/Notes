@@ -25,6 +25,7 @@ public class NotesTakerActivity extends AppCompatActivity {
     EditText edit_text, edit_notes;
     ImageView image_save;
     Notes notes;
+    boolean isOldNote = false;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,21 +43,35 @@ public class NotesTakerActivity extends AppCompatActivity {
         edit_notes = findViewById(R.id.edit_notes);
         image_save = findViewById(R.id.image_save);
 
+        notes = new Notes();
+
+        try {
+            notes = (Notes) getIntent().getSerializableExtra("old_note");
+            edit_text.setText(notes.getTitle());
+            edit_notes.setText(notes.getNotes());
+            isOldNote = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         image_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String title = edit_text.getText().toString();
                 String description = edit_notes.getText().toString();
 
-                if (description.isEmpty()){
+                if (description.isEmpty()) {
                     Toast.makeText(NotesTakerActivity.this, "Please, enter description", Toast.LENGTH_SHORT).show();
 
                     return;
                 }
-                SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss");
+                SimpleDateFormat formatter = new SimpleDateFormat("d MMM yyyy");
                 Date date = new Date();
 
-                notes = new Notes();
+                if (!isOldNote) {
+                    notes = new Notes();
+                }
+
                 notes.setTitle(title);
                 notes.setNotes(description);
                 notes.setData(formatter.format(date));
