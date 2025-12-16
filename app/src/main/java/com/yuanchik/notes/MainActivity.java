@@ -83,11 +83,10 @@ public class MainActivity extends AppCompatActivity {
         for (Notes singleNote:notes){
             if (singleNote.getTitle().toLowerCase().contains(newText.toLowerCase())
             ||singleNote.getNotes().toLowerCase().contains(newText.toLowerCase())){
-
-
-
+                filteredList.add(singleNote);
             }
         }
+        notesListAdapter.filterList(filteredList);
     }
 
     @Override
