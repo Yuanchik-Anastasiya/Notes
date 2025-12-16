@@ -1,14 +1,15 @@
 package com.yuanchik.notes;
 
 import android.app.Activity;
-import android.app.ComponentCaller;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -27,7 +28,7 @@ import com.yuanchik.notes.Moduls.Notes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
 
     RecyclerView recyclerView;
     FloatingActionButton fab_add;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     RoomDB database;
     List<Notes> notes = new ArrayList<>();
     SearchView search_view;
+    Notes selectedNotes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_home);
         fab_add = findViewById(R.id.fab_app);
-        search_view = findViewById(R.id.search_view);
+        search_view = findViewById(R.id.search_home);
         database = RoomDB.getInstance(this);
         notes = database.mainDao().getAll();
 
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, NotesTakerActivity.class);
-                startActivityForResult(intent,101);
+                startActivityForResult(intent, 101);
 
             }
         });
@@ -80,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void filter(String newText) {
         List<Notes> filteredList = new ArrayList<>();
-        for (Notes singleNote:notes){
+        for (Notes singleNote : notes) {
             if (singleNote.getTitle().toLowerCase().contains(newText.toLowerCase())
-            ||singleNote.getNotes().toLowerCase().contains(newText.toLowerCase())){
+                    || singleNote.getNotes().toLowerCase().contains(newText.toLowerCase())) {
                 filteredList.add(singleNote);
             }
         }
@@ -103,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        if (requestCode == 102){
-            if (resultCode == Activity.RESULT_OK){
+        if (requestCode == 102) {
+            if (resultCode == Activity.RESULT_OK) {
                 Notes new_notes = (Notes) data.getSerializableExtra("note");
                 database.mainDao().update(new_notes.getID(), new_notes.getTitle(), new_notes.getNotes());
                 notes.clear();
@@ -134,6 +136,43 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onLongClick(Notes notes, CardView cardView) {
 
+            selectedNotes = new Notes();
+            selectedNotes = notes;
+            showPopup(cardView);
         }
     };
+
+    private void showPopup(CardView cardView) {
+        PopupMenu popupMenu = new PopupMenu(this, cardView);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+
+        if (item.getItemId() == R.id.pin) {
+            if (selectedNotes.isPinned()) {
+                database.mainDao().pin(selectedNotes.getID(), false);
+                Toast.makeText(MainActivity.this, "Unpinned", Toast.LENGTH_SHORT).show();
+            } else {
+                database.mainDao().pin(selectedNotes.getID(), true);
+                Toast.makeText(MainActivity.this, "Pinned", Toast.LENGTH_SHORT).show();
+
+            }
+            notes.clear();
+            notes.addAll(database.mainDao().getAll());
+            notesListAdapter.notifyDataSetChanged();
+            return true;
+        } else if (item.getItemId() == R.id.delete) {
+            database.mainDao().delete(selectedNotes);
+            notes.remove(selectedNotes);
+            notesListAdapter.notifyDataSetChanged();
+            Toast.makeText(MainActivity.this, "Note removed", Toast.LENGTH_SHORT).show();
+            return true;
+
+        }
+        return false;
+    }
 }
