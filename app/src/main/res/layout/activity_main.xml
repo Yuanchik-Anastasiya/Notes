@@ -15,8 +15,20 @@
         android:src="@drawable/fon"
         android:adjustViewBounds="true" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
+        android:background="@drawable/bacground_s_v"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:queryHint="Enter the name of the note ..."
+        app:iconifiedByDefault="false"
+        android:layout_margin="8dp"
+        android:fitsSystemWindows="true"
+        android:layout_alignParentTop="true"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_home"
+        android:layout_below="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="8dp" />

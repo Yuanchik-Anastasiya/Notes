@@ -5,6 +5,7 @@ import android.app.ComponentCaller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.SearchView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     NotesListAdapter notesListAdapter;
     RoomDB database;
     List<Notes> notes = new ArrayList<>();
+    SearchView search_view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_home);
         fab_add = findViewById(R.id.fab_app);
+        search_view = findViewById(R.id.search_view);
         database = RoomDB.getInstance(this);
         notes = database.mainDao().getAll();
 
@@ -60,6 +63,31 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        search_view.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
+    }
+
+    private void filter(String newText) {
+        List<Notes> filteredList = new ArrayList<>();
+        for (Notes singleNote:notes){
+            if (singleNote.getTitle().toLowerCase().contains(newText.toLowerCase())
+            ||singleNote.getNotes().toLowerCase().contains(newText.toLowerCase())){
+
+
+
+            }
+        }
     }
 
     @Override
@@ -70,6 +98,16 @@ public class MainActivity extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 Notes new_notes = (Notes) data.getSerializableExtra("note");
                 database.mainDao().insert(new_notes);
+                notes.clear();
+                notes.addAll(database.mainDao().getAll());
+                notesListAdapter.notifyDataSetChanged();
+            }
+        }
+
+        if (requestCode == 102){
+            if (resultCode == Activity.RESULT_OK){
+                Notes new_notes = (Notes) data.getSerializableExtra("note");
+                database.mainDao().update(new_notes.getID(), new_notes.getTitle(), new_notes.getNotes());
                 notes.clear();
                 notes.addAll(database.mainDao().getAll());
                 notesListAdapter.notifyDataSetChanged();
