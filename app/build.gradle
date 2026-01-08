@@ -4,11 +4,11 @@ plugins {
 
 android {
     namespace 'com.yuanchik.notes'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.yuanchik.notes"
-        minSdk 24
+        minSdk 28
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -35,6 +35,7 @@ dependencies {
     implementation libs.activity
     implementation libs.constraintlayout
     implementation libs.room.runtime
+    implementation libs.car.ui.lib
     annotationProcessor libs.room.compiler
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
